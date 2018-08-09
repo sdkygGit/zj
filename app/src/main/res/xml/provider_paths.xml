@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path
+        name="files_root"
+        path="Android/data/com.zhuanzhuan.dev/" />
+    <external-path
+        name="files_root_dcim"
+        path="DCIM/" />
+    <external-path
+        name="external_storage_root"
+        path="." />
+    <files-path
+        name="images"
+        path="images/" />
+
+</paths>
