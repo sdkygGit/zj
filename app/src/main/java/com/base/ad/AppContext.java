@@ -6,6 +6,7 @@ import android.content.Context;
 //import com.base.ad.api.ApiClient;
 
 //import com.tencent.android.otherPush.StubAppUtils;
+import com.base.ad.api.ApiClient;
 import com.tencent.android.tpush.XGPushConfig;
 
 public class AppContext extends Application{
@@ -15,10 +16,7 @@ public class AppContext extends Application{
     public void onCreate() {
         super.onCreate();
         instance = this;
-//        init();
-
-
-
+        init();
 
         XGPushConfig.enableOtherPush(getApplicationContext(), true);
         XGPushConfig.setHuaweiDebug(false);
@@ -27,8 +25,8 @@ public class AppContext extends Application{
 //        XGPushConfig.getToken(this);
 //        XGPushConfig.setMiPushAppId(getApplicationContext(), "APPID");
 //        XGPushConfig.setMiPushAppKey(getApplicationContext(), "APPKEY");
-//        XGPushConfig.setMzPushAppId(this, "APPID");
-//        XGPushConfig.setMzPushAppKey(this, "APPKEY");
+        XGPushConfig.setMzPushAppId(this, "1001447");
+        XGPushConfig.setMzPushAppKey(this, "0a999617d04840a6841b56d6095a0851");
     }
 
 
@@ -43,10 +41,10 @@ public class AppContext extends Application{
     }
 
 
-//    void init(){
-//        AppCrashHandler.getInstance().init(this);
-//        ApiClient.init(this);
-//    }
+    void init(){
+        AppCrashHandler.getInstance().init(this);
+        ApiClient.init(this);
+    }
 
 
 }

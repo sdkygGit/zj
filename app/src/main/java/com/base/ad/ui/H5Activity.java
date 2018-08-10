@@ -133,23 +133,7 @@ public class H5Activity extends BaseActivity implements View.OnClickListener {
         mCurrentUrl = getIntent().getStringExtra("url");
 
         mBinding.webview.loadUrl(mCurrentUrl);
-
-        XGPushManager.registerPush(getApplicationContext(),
-                new XGIOperateCallback() {
-                    @Override
-                    public void onSuccess(Object data, int flag) {
-//                        Log.w(Constants.LogTag, "+++ register push sucess. token:" + data + "flag" + flag);
-                    }
-
-                    @Override
-                    public void onFail(Object data, int errCode, String msg) {
-//                        Log.w(Constants.LogTag,
-//                                "+++ register push fail. token:" + data
-//                                        + ", errCode:" + errCode + ",msg:"
-//                                        + msg);
-                    }
-
-                });
+//        mBinding.webview.loadUrl("file:///android_asset/a.html");
     }
 
     @Override
