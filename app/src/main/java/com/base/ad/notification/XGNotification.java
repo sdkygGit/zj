@@ -1,6 +1,8 @@
 package com.base.ad.notification;
 
-public class XGNotification {
+import org.litepal.crud.LitePalSupport;
+
+public class XGNotification extends LitePalSupport{
     private Integer id;
     private Long msg_id;
     private String title;

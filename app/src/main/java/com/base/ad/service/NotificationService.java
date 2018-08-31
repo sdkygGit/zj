@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.base.ad.db.DBOpenHelper;
 import com.base.ad.notification.XGNotification;
 
+import org.litepal.LitePal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class NotificationService {
 
     public void delete(Integer id) {
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
-        db.delete("notification", "id=?", new String[] { id.toString() });
+        db.delete("notification", "id=?", new String[]{id.toString()});
     }
 
     public void deleteAll() {
@@ -57,16 +59,16 @@ public class NotificationService {
         values.put("activity", notification.getActivity());
         values.put("notificationActionType", notification.getNotificationActionType());
         values.put("update_time", notification.getUpdate_time());
-        db.update("notification", values, "id=?", new String[] { notification
-                .getId().toString() });
+        db.update("notification", values, "id=?", new String[]{notification
+                .getId().toString()});
     }
 
     public XGNotification find(Integer id) {
         SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
         Cursor cursor = db
                 .query("notification",
-                        new String[] { "id,msg_id,title,content,activity,notificationActionType,update_time" },
-                        "id=?", new String[] { id.toString() }, null, null,
+                        new String[]{"id,msg_id,title,content,activity,notificationActionType,update_time"},
+                        "id=?", new String[]{id.toString()}, null, null,
                         null, "1");
         try {
             if (cursor.moveToFirst()) {
@@ -94,14 +96,16 @@ public class NotificationService {
             if (msg_id == null || "".equals(msg_id)) {
                 cursor = db
                         .query("notification",
-                                new String[] { "id,msg_id,title,content,activity,notificationActionType,update_time" },
+                                new String[]{"id,msg_id,title,content,activity,notificationActionType,update_time"},
                                 null, null, null, null, "update_time DESC",
                                 firstResult + "," + lineSize);
+
+
             } else {
                 cursor = db
                         .query("notification",
-                                new String[] { "id,msg_id,title,content,activity,notificationActionType,update_time" },
-                                "msg_id like ?", new String[] { msg_id + "%" },
+                                new String[]{"id,msg_id,title,content,activity,notificationActionType,update_time"},
+                                "msg_id like ?", new String[]{msg_id + "%"},
                                 null, null, "update_time DESC", firstResult
                                         + "," + lineSize);
             }
@@ -119,6 +123,26 @@ public class NotificationService {
             return notifications;
         } finally {
             cursor.close();
+        }
+    }
+
+
+    public List<XGNotification> getScrollData2(int currentPage, int lineSize,
+                                               String msg_id) {
+        int firstResult = (currentPage - 1) * lineSize;
+        if (msg_id == null || "".equals(msg_id)) {
+
+            return LitePal.select(new String[]{"id,msg_id,title,content,activity,notificationActionType,update_time"})
+                    .order("update_time DESC")
+                    .limit(10).offset(firstResult)
+                    .find(XGNotification.class);
+        } else {
+
+            return LitePal.select(new String[]{"id,msg_id,title,content,activity,notificationActionType,update_time"})
+                    .where("msg_id like ?", msg_id + "%")
+                    .order("update_time DESC")
+                    .limit(10).offset(firstResult)
+                    .find(XGNotification.class);
         }
     }
 

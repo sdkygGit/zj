@@ -20,35 +20,41 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 #指定代码的压缩级别
--optimizationpasses 5
-#
-##包明不混合大小写
--dontusemixedcaseclassnames
-#
-##不去忽略非公共的库类
--dontskipnonpubliclibraryclasses
-#
-# #优化  不优化输入的类文件
--dontoptimize
-#
-# #预校验
--dontpreverify
-#
-# #混淆时是否记录日志
--verbose
+
 #
 # # 混淆时所采用的算法
--optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+#-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
 
+-dontshrink
+-optimizationpasses 5
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontpreverify
+-verbose
+-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+-ignorewarnings#忽略警告 也可以用
+-dontwarn
+-allowaccessmodification
+-dontskipnonpubliclibraryclassmembers
+
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.backup.BackupAgentHelper
+-keep public class * extends android.preference.Preference
+-keep public class * extends android.support.v4.**
+-keep public class com.android.vending.licensing.ILicensingService
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.Fragment
 
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
 -keep class com.tencent.android.tpush.** {* ;}
 -keep class com.tencent.mid.** {* ;}
 -keep class com.qq.taf.jce.** {*;}
+-keep class com.tencent.bigdata.** {* ;}
+-keep class com.tencent.mm.sdk.modelmsg.WXMediaMessage {*;}
+-keep class com.tencent.mm.sdk.modelmsg.** implements com.tencent.mm.sdk.modelmsg.WXMediaMessage$IMediaObject {*;}
+#华为通道
 
-#华为通道保留
--ignorewarning
 -keepattributes *Annotation*
 -keepattributes Exceptions
 -keepattributes InnerClasses
@@ -58,11 +64,52 @@
 -keep class com.huawei.updatesdk.**{*;}
 -keep class com.huawei.hms.**{*;}
 
-#小米通道保留
+#小米通道
 -keep class com.xiaomi.**{*;}
 -keep public class * extends com.xiaomi.mipush.sdk.PushMessageReceiver
 
-#魅族通道保留
+#魅族通道
 -dontwarn com.meizu.cloud.pushsdk.**
 -keep class com.meizu.cloud.pushsdk.**{*;}
+#LitePal 2.0
+-keep class org.litepal.** {
+    *;
+}
 
+-keep class * extends org.litepal.crud.DataSupport {
+    *;
+}
+-keep class * extends org.litepal.crud.LitePalSupport {
+    *;
+}
+
+-keep class com.google.example.easypermissions.** {
+    *;
+}
+-keep class pub.devrel.easypermissions.**  {
+    *;
+}
+
+-keep class pub.devrel.easypermissions.**  {
+    *;
+}
+
+-keep class com.squareup.**  {
+    *;
+}
+-keep class com.github.**  {
+    *;
+}
+-keep class com.android.**  {
+    *;
+}
+
+-keep class android.arch.**  {
+    *;
+}
+-keep class android.databinding.**  {
+    *;
+}
+-keep class com.google.gson.**  {
+    *;
+}

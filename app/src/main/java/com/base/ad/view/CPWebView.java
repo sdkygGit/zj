@@ -14,6 +14,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.base.ad.AppContext;
 import com.base.ad.R;
 import com.base.ad.SimplexToast;
 import com.base.ad.bean.LoginRet;
@@ -21,6 +22,7 @@ import com.base.ad.utils.Utils;
 import com.google.gson.JsonObject;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushManager;
+import com.tencent.android.tpush.XGPushNotificationBuilder;
 import com.tencent.android.tpush.common.Constants;
 
 import org.json.JSONException;
@@ -45,7 +47,6 @@ public class CPWebView extends WebView {
 
     @SuppressLint("JavascriptInterface")
     private void initWebViewSettings(Context context, AttributeSet attributeSet) {
-
 
         WebSettings webSetting = this.getSettings();
         webSetting.setJavaScriptEnabled(true);
@@ -104,12 +105,22 @@ public class CPWebView extends WebView {
             @JavascriptInterface
             public void loginCallback(final String object) {//方法名必须是js使用的方法名
 
-              Log.d("H5Activity",object);
+                Log.d("H5Activity", object);
+
+                ((Activity) getContext()).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SimplexToast.show(getContext(), object);
+                    }
+                });
 
                 XGPushManager.registerPush(getContext(), object,
                         new XGIOperateCallback() {
                             @Override
                             public void onSuccess(Object data, int flag) {
+
+                                AppContext.set("xg_register", object);
+                                XGPushManager.setTag(getContext(), object);
                                 Log.w(Constants.LogTag, "+++ register push sucess. token:" + data + "flag" + flag);
                             }
 
@@ -126,6 +137,17 @@ public class CPWebView extends WebView {
             @JavascriptInterface
             public String getDeviceId() {//方法名必须是js使用的方法名
                 return Utils.getDeviceId(getContext());
+            }
+
+            @JavascriptInterface
+            public void logoutCallback() {//方法名必须是js使用的方法名
+                String xg_register = AppContext.get("xg_register", null);
+                if (xg_register != null) {
+                    XGPushManager.delAccount(getContext(), xg_register);
+                    XGPushManager.deleteTag(getContext(), xg_register);
+                } else {
+                    XGPushManager.unregisterPush(getContext());
+                }
             }
         };
 

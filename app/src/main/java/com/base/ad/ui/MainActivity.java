@@ -40,6 +40,7 @@ import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
+import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.common.Constants;
 
 import java.lang.ref.WeakReference;
@@ -88,6 +89,24 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         //开启信鸽的日志输出，线上版本不建议调用
 
 
+        XGPushManager.registerPush(this,
+                new XGIOperateCallback() {
+                    @Override
+                    public void onSuccess(Object data, int flag) {
+
+
+                        XGPushManager.setTag(MainActivity.this, "3b35bdc75f46dc7df233af65908a7b65");
+                        Log.w(Constants.LogTag, "+++ register push sucess. token:" + data + "flag" + flag);
+                    }
+
+                    @Override
+                    public void onFail(Object data, int errCode, String msg) {
+                        Log.w(Constants.LogTag,
+                                "+++ register push fail. token:" + data
+                                        + ", errCode:" + errCode + ",msg:"
+                                        + msg);
+                    }
+                });
 
         //注册数据更新监听器
         updateListViewReceiver = new MsgReceiver();
@@ -102,7 +121,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
 
         // 获取token
-        XGPushConfig.getToken(this);
 
         //反注册代码，线上版本不能调用
         //XGPushManager.unregisterPush(this);
@@ -226,10 +244,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         if (click != null) { // 判断是否来自信鸽的打开方式
 //            Toast.makeText(this, "通知被点击:" + click.toString(),
 //                    Toast.LENGTH_SHORT).show();
-            Log.d("","通知被点击:" + click.toString());
+            Log.d("", "通知被点击:" + click.toString());
         }
 
-        Log.d("DEVICE", Utils.getDeviceId(this));
     }
 
     @Override
@@ -242,7 +259,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     protected void onPause() {
         super.onPause();
         XGPushManager.onActivityStoped(this);
-
     }
 
     private void showSpinner() {
@@ -404,6 +420,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     }
 
     ;
+
     private class pushViewHolder {
         TextView msg_idv;
         TextView titlev;
@@ -532,7 +549,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
         // 创建适配器
         adapter = new pushAdapter(this);
-        adapter.setData(NotificationService.getInstance(this).getScrollData(
+        adapter.setData(NotificationService.getInstance(this).getScrollData2(
                 currentPage = 1, lineSize, id));
         if (allRecorders <= lineSize) {
             bloadLayout.setVisibility(View.GONE);
@@ -556,7 +573,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         int oldsize = adapter.getData().size();
         // 更新适配器
         adapter.getData().addAll(
-                NotificationService.getInstance(this).getScrollData(
+                NotificationService.getInstance(this).getScrollData2(
                         currentPage, lineSize, id));
         // 如果到了最末尾则去掉"正在加载"
         if (allRecorders == adapter.getCount()) {

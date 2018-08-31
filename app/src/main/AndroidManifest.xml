@@ -22,12 +22,6 @@
         </provider>
 
         <activity
-            android:name=".ui.TestActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
-
-        <activity
             android:name=".LaunchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/App.Theme.Launch">

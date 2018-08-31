@@ -2,9 +2,12 @@ package com.base.ad.receiver;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.base.ad.SimplexToast;
+import com.base.ad.notification.NotificationUtils;
 import com.base.ad.notification.XGNotification;
 import com.base.ad.service.NotificationService;
 import com.tencent.android.tpush.XGPushBaseReceiver;
@@ -15,17 +18,20 @@ import com.tencent.android.tpush.XGPushTextMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
+import org.litepal.tablemanager.Connector;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class XGMessageReceiver extends XGPushBaseReceiver{
 
-    private Intent intent = new Intent("com.qq.xgdemo.activity.UPDATE_LISTVIEW");
     public static final String LogTag = "TPushReceiver";
 
     private void show(Context context, String text) {
-//		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+        SimplexToast.show(context,text);
     }
 
     // 通知展示
@@ -46,9 +52,10 @@ public class XGMessageReceiver extends XGPushBaseReceiver{
         notific.setActivity(notifiShowedRlt.getActivity());
         notific.setUpdate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                 .format(Calendar.getInstance().getTime()));
-        NotificationService.getInstance(context).save(notific);
-        context.sendBroadcast(intent);
-        show(context, "您有1条新消息, " + "通知被展示 ， " + notifiShowedRlt.toString());
+        notific.save();
+
+//        NotificationService.getInstance(context).save(notific);
+//        show(context, "您有1条新消息, " + "通知被展示 ， " + notifiShowedRlt.toString());
     }
 
     @Override
@@ -79,8 +86,6 @@ public class XGMessageReceiver extends XGPushBaseReceiver{
             text = "\"" + tagName + "\"设置失败,错误码：" + errorCode;
         }
         Log.d(LogTag, text);
-        show(context, text);
-
     }
 
     @Override
@@ -95,7 +100,6 @@ public class XGMessageReceiver extends XGPushBaseReceiver{
             text = "\"" + tagName + "\"删除失败,错误码：" + errorCode;
         }
         Log.d(LogTag, text);
-        show(context, text);
 
     }
 
@@ -136,7 +140,6 @@ public class XGMessageReceiver extends XGPushBaseReceiver{
         }
         // APP自主处理的过程。。。
         Log.d(LogTag, text);
-        show(context, text);
     }
 
     @Override
@@ -155,7 +158,6 @@ public class XGMessageReceiver extends XGPushBaseReceiver{
             text = message + "注册失败，错误码：" + errorCode;
         }
         Log.d(LogTag, text);
-        show(context, text);
     }
 
     // 消息透传
@@ -165,7 +167,7 @@ public class XGMessageReceiver extends XGPushBaseReceiver{
         String text = "收到消息:" + message.toString();
         // 获取自定义key-value
         String customContent = message.getCustomContent();
-        if (customContent != null && customContent.length() != 0) {
+        if (customContent != null && customContent.length() != 0) {//参数
             try {
                 JSONObject obj = new JSONObject(customContent);
                 // key1为前台配置的key
@@ -181,5 +183,12 @@ public class XGMessageReceiver extends XGPushBaseReceiver{
         // APP自主处理消息的过程...
         Log.d(LogTag, text);
         show(context, text);
+
+//        tongzhi(context,message);
+    }
+
+    private void tongzhi(Context context,XGPushTextMessage message) {
+        NotificationUtils notificationUtils = new NotificationUtils(context);
+        notificationUtils.sendNotification(message.getTitle(),message.getContent());
     }
 }

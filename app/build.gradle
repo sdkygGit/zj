@@ -13,17 +13,17 @@ android {
 
         ndk {
             //选择要添加的对应cpu类型的.so库。
-            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a','x86'
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86'
 //            , 'armeabi-v7a', 'arm64-v8a','x86', 'x86_64', 'mips', 'mips64'
             // 还可以添加  'mips', 'mips64', 'armeabi-v7a', 'arm64-v8a','x86', 'x86_64', 'mips', 'mips64'
 
         }
 
         manifestPlaceholders = [
-                XG_ACCESS_ID:"2100302000",
-                XG_ACCESS_KEY:"A9CU2288ZYNE",
-                HW_APPID: "100371603",
-                PACKAGE_NAME:"com.base.ad"
+                XG_ACCESS_ID : "2100302000",
+                XG_ACCESS_KEY: "A9CU2288ZYNE",
+                HW_APPID     : "100371603",
+                PACKAGE_NAME : "com.base.ad"
         ]
     }
     dataBinding {
@@ -37,13 +37,14 @@ android {
 //    }
 
     buildTypes {
-//        debug {
-//            zipAlignEnabled true
-//            minifyEnabled true
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//        }
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
         }
@@ -55,7 +56,10 @@ android {
             storePassword "sdkyg123"
             keyAlias "zj"
             keyPassword "sdkyg456"
+
+
         }
+
     }
 }
 
@@ -75,7 +79,7 @@ dependencies {
 
     implementation 'com.tencent.xinge:xinge:3.2.5'
     //jg包
-    implementation'com.tencent.jg:jg:1.1'
+    implementation 'com.tencent.jg:jg:1.1'
     //wup包
     implementation 'com.tencent.wup:wup:1.0.0.E-release'
     //mid包
@@ -89,5 +93,8 @@ dependencies {
     //小米通道
     implementation 'com.tencent.xinge:mipush:3.2.5-release'
 
-    implementation project(':rxandroid')
+   // implementation project(':rxandroid')
+
+    //LitePal 2.0
+    implementation 'org.litepal.android:core:2.0.0'
 }

@@ -1,1 +1,1 @@
-include ':app', ':testcp', ':rxandroid'
+include ':app'
